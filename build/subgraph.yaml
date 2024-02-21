@@ -2,7 +2,7 @@ specVersion: 1.0.0
 indexerHints:
   prune: auto
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: CryptoOcto
@@ -26,7 +26,7 @@ dataSources:
         - Transfer
       abis:
         - name: CryptoOcto
-          file: ./abis/CryptoOcto.json
+          file: CryptoOcto/abis/CryptoOcto.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
@@ -44,7 +44,7 @@ dataSources:
           handler: handleRoleRevoked
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/crypto-octo.ts
+      file: CryptoOcto/CryptoOcto.wasm
   - kind: ethereum
     name: CryptoOctoMarketplace
     network: mainnet
@@ -63,7 +63,7 @@ dataSources:
         - ListingPurchased
       abis:
         - name: CryptoOctoMarketplace
-          file: ./abis/CryptoOctoMarketplace.json
+          file: CryptoOctoMarketplace/abis/CryptoOctoMarketplace.json
       eventHandlers:
         - event: ListingCreated(indexed address,indexed uint256,uint256,address)
           handler: handleListingCreated
@@ -73,4 +73,4 @@ dataSources:
           handler: handleListingUpdated
         - event: ListingPurchased(indexed address,indexed address,indexed uint256,address)
           handler: hadnleListingPurchased
-      file: ./src/crypto-octo.ts
+      file: CryptoOcto/CryptoOcto.wasm
