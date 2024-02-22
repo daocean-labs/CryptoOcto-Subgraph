@@ -31,7 +31,7 @@ import {
   RoleRevoked,
   Transfer,
 } from "../generated/schema";
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, ipfs, json, log } from "@graphprotocol/graph-ts";
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
@@ -153,10 +153,38 @@ export function handleTransfer(event: TransferEvent): void {
   let contractAddress = CryptoOcto.bind(event.address);
   let cryptoOcto = Octo.load(event.params.tokenId.toString());
 
+  const ipfsHash =
+    "bafybeiethxy5iicqiz7yhfs5velij57f34slwp6vhv3eqowkeqal4qd67y";
+  let tokenURI = "/" + event.params.tokenId.toString() + ".json";
+
   if (cryptoOcto == null) {
     cryptoOcto = new Octo(event.params.tokenId.toString());
     cryptoOcto.creator = event.params.to;
     cryptoOcto.tokenURI = contractAddress.tokenURI(event.params.tokenId);
+
+    let fullURI = ipfsHash + tokenURI;
+
+    log.info("The fullURI is: {} ", [fullURI]);
+
+    let ipfsData = ipfs.cat(fullURI);
+
+    if (ipfsData) {
+      let ipfsValues = json.fromBytes(ipfsData);
+
+      let ipfsValuesObject = ipfsValues.toObject();
+
+      if (ipfsValuesObject) {
+        const rarity = ipfsValuesObject.get("rarity");
+        const image = ipfsValuesObject.get("image");
+
+        if (rarity) {
+          cryptoOcto.rarity = rarity.toBigInt();
+        }
+        if (image) {
+          cryptoOcto.image = image.toString();
+        }
+      }
+    }
   }
 
   cryptoOcto.newOwner = event.params.to;

@@ -1043,6 +1043,32 @@ export class Octo extends Entity {
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
   }
+
+  get rarity(): BigInt {
+    let value = this.get("rarity");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set rarity(value: BigInt) {
+    this.set("rarity", Value.fromBigInt(value));
+  }
+
+  get image(): string {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string) {
+    this.set("image", Value.fromString(value));
+  }
 }
 
 export class ListingCreation extends Entity {
