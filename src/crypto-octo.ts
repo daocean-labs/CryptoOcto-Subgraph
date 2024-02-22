@@ -26,6 +26,7 @@ import {
   ListingPurchase,
   ListingUpdate,
   Octo,
+  OctoProperty,
   RoleAdminChanged,
   RoleGranted,
   RoleRevoked,
@@ -161,7 +162,16 @@ export function handleTransfer(event: TransferEvent): void {
     cryptoOcto = new Octo(event.params.tokenId.toString());
     cryptoOcto.creator = event.params.to;
     cryptoOcto.tokenURI = contractAddress.tokenURI(event.params.tokenId);
+  }
 
+  cryptoOcto.newOwner = event.params.to;
+  cryptoOcto.blockNumber = event.block.number;
+  cryptoOcto.save();
+
+  let property = OctoProperty.load(event.params.tokenId.toString());
+
+  if (property == null) {
+    property = new OctoProperty(event.params.tokenId.toString());
     let fullURI = ipfsHash + tokenURI;
 
     log.info("The fullURI is: {} ", [fullURI]);
@@ -178,18 +188,16 @@ export function handleTransfer(event: TransferEvent): void {
         const image = ipfsValuesObject.get("image");
 
         if (rarity) {
-          cryptoOcto.rarity = rarity.toBigInt();
+          property.rarity = rarity.toBigInt();
         }
         if (image) {
-          cryptoOcto.image = image.toString();
+          property.image = image.toString();
         }
+
+        property.save();
       }
     }
   }
-
-  cryptoOcto.newOwner = event.params.to;
-  cryptoOcto.blockNumber = event.block.number;
-  cryptoOcto.save();
 
   // Check if a active listing and set the purchase price to zero
 

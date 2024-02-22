@@ -1043,22 +1043,38 @@ export class Octo extends Entity {
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
   }
+}
 
-  get rarity(): BigInt {
-    let value = this.get("rarity");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
+export class OctoProperty extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save OctoProperty entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type OctoProperty must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("OctoProperty", id.toString(), this);
     }
   }
 
-  set rarity(value: BigInt) {
-    this.set("rarity", Value.fromBigInt(value));
+  static loadInBlock(id: string): OctoProperty | null {
+    return changetype<OctoProperty | null>(
+      store.get_in_block("OctoProperty", id),
+    );
   }
 
-  get image(): string {
-    let value = this.get("image");
+  static load(id: string): OctoProperty | null {
+    return changetype<OctoProperty | null>(store.get("OctoProperty", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1066,8 +1082,42 @@ export class Octo extends Entity {
     }
   }
 
-  set image(value: string) {
-    this.set("image", Value.fromString(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get rarity(): BigInt | null {
+    let value = this.get("rarity");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set rarity(value: BigInt | null) {
+    if (!value) {
+      this.unset("rarity");
+    } else {
+      this.set("rarity", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get image(): string | null {
+    let value = this.get("image");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set image(value: string | null) {
+    if (!value) {
+      this.unset("image");
+    } else {
+      this.set("image", Value.fromString(<string>value));
+    }
   }
 }
 

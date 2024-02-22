@@ -82,6 +82,10 @@ type Octo @entity {
   newOwner: Bytes!
   tokenURI: String!
   blockNumber: BigInt!
+}
+
+type OctoProperty @entity {
+  id: ID!
   rarity: BigInt
   image: String
 }
