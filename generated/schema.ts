@@ -1043,6 +1043,23 @@ export class Octo extends Entity {
   set blockNumber(value: BigInt) {
     this.set("blockNumber", Value.fromBigInt(value));
   }
+
+  get property(): string | null {
+    let value = this.get("property");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set property(value: string | null) {
+    if (!value) {
+      this.unset("property");
+    } else {
+      this.set("property", Value.fromString(<string>value));
+    }
+  }
 }
 
 export class OctoProperty extends Entity {
@@ -1117,6 +1134,40 @@ export class OctoProperty extends Entity {
       this.unset("image");
     } else {
       this.set("image", Value.fromString(<string>value));
+    }
+  }
+
+  get cooldown(): BigInt | null {
+    let value = this.get("cooldown");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set cooldown(value: BigInt | null) {
+    if (!value) {
+      this.unset("cooldown");
+    } else {
+      this.set("cooldown", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get generation(): BigInt | null {
+    let value = this.get("generation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set generation(value: BigInt | null) {
+    if (!value) {
+      this.unset("generation");
+    } else {
+      this.set("generation", Value.fromBigInt(<BigInt>value));
     }
   }
 }

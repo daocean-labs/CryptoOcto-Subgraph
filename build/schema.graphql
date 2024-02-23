@@ -82,12 +82,15 @@ type Octo @entity {
   newOwner: Bytes!
   tokenURI: String!
   blockNumber: BigInt!
+  property: OctoProperty
 }
 
 type OctoProperty @entity {
   id: ID!
   rarity: BigInt
   image: String
+  cooldown: BigInt
+  generation: BigInt
 }
 
 # types for the marketplace

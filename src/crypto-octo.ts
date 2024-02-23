@@ -166,7 +166,6 @@ export function handleTransfer(event: TransferEvent): void {
 
   cryptoOcto.newOwner = event.params.to;
   cryptoOcto.blockNumber = event.block.number;
-  cryptoOcto.save();
 
   let property = OctoProperty.load(event.params.tokenId.toString());
 
@@ -183,7 +182,9 @@ export function handleTransfer(event: TransferEvent): void {
 
       let ipfsValuesObject = ipfsValues.toObject();
 
-      if (ipfsValuesObject) {
+      const info = contractAddress.getOctoInfo(event.params.tokenId);
+
+      if (ipfsValuesObject && info) {
         const rarity = ipfsValuesObject.get("rarity");
         const image = ipfsValuesObject.get("image");
 
@@ -194,10 +195,20 @@ export function handleTransfer(event: TransferEvent): void {
           property.image = image.toString();
         }
 
+        if (info.cooldown) {
+          property.cooldown = info.cooldown;
+        }
+
+        if (info.generation) {
+          property.generation = new BigInt(info.generation);
+        }
+
         property.save();
+        cryptoOcto.property = property.id;
       }
     }
   }
+  cryptoOcto.save();
 
   // Check if a active listing and set the purchase price to zero
 
