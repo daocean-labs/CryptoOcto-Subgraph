@@ -5,11 +5,11 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "create-local": "graph create --node http://localhost:8020/ CryptoOcto",
-    "create": "graph create --node http://octodefi.com:8020/deploy/ CryptoOcto",
+    "create": "graph create --node https://graph1.octodefi.com/deploy CryptoOcto",
     "remove-local": "graph remove --node http://localhost:8020/ CryptoOcto",
     "remove": "graph remove --node http://octodefi.com:8020/ CryptoOcto",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 CryptoOcto",
-    "deploy-server": "graph deploy --node http://octodefi.com:8020/deploy --ipfs http://octodefi.com:5001 CryptoOcto",
+    "deploy-server": "graph deploy --node https://graph1.octodefi.com/ --ipfs https://ipfs1.octodefi.com/ CryptoOcto",
     "test": "graph test"
   },
   "dependencies": {
